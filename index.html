@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <!-- Placeholder favicon, replace with your custom icon -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sivaji Chinnam | AI Innovator & Full Stack Developer</title>
+
+    <!-- 
+        Tailwind CSS CDN
+        This fulfills the requirement to load Tailwind without an npm installation.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 
+        Configure the 'Inter' font and prevent unexpected horizontal scrolling 
+        which sometimes occurs due to subtle Framer Motion transforms. 
+    -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; 
+        }
+    </style>
+</head>
+<body>
+    <!-- The root element where the React application (App.jsx) will be mounted -->
+    <div id="root"></div>
+    
+    <!-- 
+        This script tag points to the entry file (main.jsx) that initializes the React application.
+        The App.jsx component's logic runs through this entry point.
+    -->
+    <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>
