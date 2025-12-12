@@ -22,7 +22,7 @@ const portfolioData = {
 
   // UPDATED EDUCATION DATA
   education: [
-    { title: "B.Tech in Computer Science with Specialization in Data Science", institution: "Chalapathi Institute of Technology", year: "2020 - 2026" },
+    { title: "B.Tech in Computer Science with Specialization in Data Science", institution: "Chalapathi Institute of Technology", year: "2021 - 2025" },
   ],
   mission: "To leverage cutting-edge AI and Full Stack technologies to build impactful, scalable, and beautifully designed digital solutions that solve real-world problems.",
   strengths: ["Problem-Solving", "Rapid Prototyping", "Team Collaboration", "Continuous Learning"],
