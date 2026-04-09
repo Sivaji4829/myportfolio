@@ -1,172 +1,119 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useAnimation, useInView } from 'framer-motion';
-import { Home, User, Folder, Mail, Linkedin, Github, Twitter, Zap, GraduationCap, Code, Heart, CheckCircle, Calendar, Users, Award, ExternalLink, Code as CodeIcon, Lightbulb, TrendingUp, ArrowRight, ChevronDown } from 'lucide-react'; 
+import { motion, useAnimation, useInView, AnimatePresence } from 'framer-motion';
+import { 
+  Home, User, Folder, Mail, Linkedin, Github, 
+  CheckCircle, Calendar, Users, Award, 
+  ExternalLink, Lightbulb, TrendingUp, 
+  ArrowRight, ChevronDown, Rocket, Sparkles, Globe
+} from 'lucide-react'; 
 
-// CRITICAL FIX: Using a guaranteed public URL for background visibility
-const HERO_BACKGROUND_URL = "profile3.jpg"; 
+// Publicly accessible background for the Hero section
+const HERO_BACKGROUND_URL = "/profile3.jpg"; 
 
-// --- Static Data ---
 const portfolioData = {
   name: "Sivaji Chinnam", 
   role: "AI Innovator | Full Stack Developer", 
   taglines: ["Building the Future, One Commit at a Time.", "Seamless UX, Powerful Backend.", "Blending AI with Modern Web Development."],
-  
-  // Technical Proficiency
   technicalProficiency: {
-    languages: ["Python", "JavaScript (ES6+)", "HTML5", "CSS3", "PHP", "SQL"],
-    frameworks: ["React.js", "Node.js", "Express.js", "Flask", "Django", "Bootstrap", "Vite"],
+    languages: ["Python", "JavaScript", "HTML5", "CSS3", "SQL"],
+    frameworks: ["React.js", "Node.js", "Express", "Flask", "Django", "Vite"],
     databases: ["MongoDB", "MySQL", "PostgreSQL"],
-    tools: ["Git & GitHub", "Docker", "AWS", "GCP", "Zscaler", "Google Cloud Console", "VS Code"],
-    aiMl: ["OpenAI API", "Cohere API", "Scikit-learn", "spaCy", "NLTK", "Pandas", "NumPy", "Explainable AI"]
+    tools: ["Git & GitHub", "Docker", "AWS", "GCP", "VS Code"],
+    aiMl: ["OpenAI API", "Cohere", "Scikit-learn", "NLP", "Pandas", "NumPy"]
   },
-
-  // UPDATED EDUCATION DATA
   education: [
-    { title: "B.Tech in Computer Science with Specialization in Data Science", institution: "Chalapathi Institute of Technology", year: "2021 - 2025" },
+    { title: "B.Tech in Computer Science (Data Science)", institution: "Chalapathi Institute of Technology", year: "2020 - 2026" },
   ],
   mission: "To leverage cutting-edge AI and Full Stack technologies to build impactful, scalable, and beautifully designed digital solutions that solve real-world problems.",
   strengths: ["Problem-Solving", "Rapid Prototyping", "Team Collaboration", "Continuous Learning"],
-  
-  // Project List with Demo/Code links
-  projects: [
-    { 
-      title: "Kisan Kart", 
-      description: "A full-fledged e-commerce platform for farmers to buy and sell products using React, Node.js, and Bootstrap.", 
-      tags: ["React", "Node.js", "e-commerce"], 
-      image: "https://placehold.co/400x250/C8F2C7/0E4A1A?text=Kisan+Kart",
-      demoLink: "#", 
-      codeLink: "#"
-    },
-    { 
-      title: "Suraksha Setu", 
-      description: "Disaster management platform for quick SOS reporting and live location tracking using AI and real-time alerts.", 
-      tags: ["AI", "Real-time", "Disaster Mgmt"], 
-      image: "https://placehold.co/400x250/FFE4B5/8B4513?text=Suraksha+Setu",
-      demoLink: "#", 
-      codeLink: "#"
-    },
-    { 
-      title: "FRIDAY AI Assistant", 
-      description: "An AI-powered personal assistant built with Flask, React, and APIs like OpenAI, Cohere, and OpenWeatherMap.", 
-      tags: ["Flask", "React", "OpenAI", "Cohere"], 
-      image: "https://placehold.co/400x250/D2E8FF/1034A6?text=FRIDAY+AI",
-      demoLink: "#", 
-      codeLink: "#"
-    },
-    { 
-      title: "AI Translator", 
-      description: "A language translation app using machine learning models and language APIs for seamless multilingual communication.", 
-      tags: ["ML", "APIs", "Translation"], 
-      image: "https://placehold.co/400x250/F0E68C/6B8E23?text=AI+Translator",
-      demoLink: "#", 
-      codeLink: "#"
-    },
-    { 
-      title: "PDF to Text Converter", 
-      description: "Convert PDF files into readable text using Python, PyPDF2 and frontend UI built in React.", 
-      tags: ["Python", "PyPDF2", "React"], 
-      image: "https://placehold.co/400x250/E6E6FA/4B0082?text=PDF+Converter",
-      demoLink: "#", 
-      codeLink: "#"
-    },
-    { 
-      title: "Read Aloud App", 
-      description: "Text-to-Speech application that reads aloud documents and webpages using web speech synthesis APIs.", 
-      tags: ["Web Speech API", "React"], 
-      image: "https://placehold.co/400x250/ADD8E6/00008B?text=Read+Aloud",
-      demoLink: "#", 
-      codeLink: "#"
-    },
-  ],
-  
-  // Certifications (Mapping to portfolioData.achievements)
+  projectNames: ["Sanchari", "Suraksha Setu", "Nyaya Vadh AI", "KisanKart", "Vaidhya AI", "Bujji HealthCare AI", "PinakaPani", "ResumeKaro"],
   achievements: [
-    { name: "Artificial Intelligence Fundamentals", org: "IBM", date: "Certification" },
-    { name: "Advanced Learning Algorithms", org: "Coursera (DeepLearning.ai)", date: "Certification" },
-    { name: "Cloud Computing", org: "NPTEL (IIT-M)", date: "Certification" },
-    { name: "Introduction to IoT", org: "NPTEL", date: "Certification" },
-    { name: "Data Science Foundations", org: "Infosys Springboard", date: "Certification" },
-    { name: "Networking for Cyber Professionals", org: "Zscaler Academy", date: "Certification" },
-    { name: "Google Cloud Skills Boost", org: "Gold League Member (25 Badges, 30k+ XP)", date: "Certification" },
-    { name: "Micro Certification", org: "ServiceNow", date: "Certification" },
-    { name: "Generative AI - Essential Courses", org: "Completed", date: "Certification" },
+    { name: "Artificial Intelligence Fundamentals", org: "IBM" },
+    { name: "Advanced Learning Algorithms", org: "Coursera (DeepLearning.ai)" },
+    { name: "Cloud Computing", org: "NPTEL (IIT-M)" },
+    { name: "Google Cloud Skills Boost", org: "Gold League Member" },
   ],
-  // Events/Activities (Mapping to portfolioData.events)
   events: [
-    { name: "Finalist - SAP Hackfest", role: "National Level Competition", date: "Activity", icon: Award },
-    { name: "Runner-up in Python AI Workshop", role: "Competition", date: "Activity", icon: Award },
-    { name: "Top 5 finalist in IEDC CE Thalassery Hacktly", role: "Competition", date: "Activity", icon: Award },
-    { name: "Organized two college tech events", role: "CODE HUNT", date: "Activity", icon: Users },
-    { name: "Qualified Coding Round of Adobe India Hackathon 2025", role: "Coding Competition", date: "Activity", icon: Award },
-    { name: "Tech Talk: Future of AI in Web", role: "Keynote Speaker", date: "Mar 2024", icon: Calendar },
+    { name: "Finalist - SAP Hackfest", role: "National Level", icon: Award },
+    { name: "Runner-up in Python AI Workshop", role: "Workshop", icon: Award },
+    { name: "Top 5 finalist in Hacktly", role: "IEDC CE Thalassery", icon: Award },
+    { name: "Organized CODE HUNT", role: "Event Lead", icon: Users },
   ],
-
-  // CreaGen Solutions Data
   creagen: {
-    vision: "To transform visionary ideas into functional digital realities. We believe that with the right application of AI and Full Stack expertise, everything is possible.",
+    vision: "To transform visionary ideas into functional digital realities.",
     completedProjects: [
-      { name: "Custom E-commerce API (Node.js/MongoDB)", targetId: "#projects" },
-      { name: "Real-time Data Dashboard (React/D3)", targetId: "#projects" },
+      { name: "Custom E-commerce API" },
+      { name: "Real-time Data Dashboard" },
     ],
     upcomingProjects: [
-      { name: "Generative AI Content Platform" },
-      { name: "Blockchain-based Supply Chain Tracker" },
-      { name: "Advanced NLP Chatbot Integration" },
+      { name: "Generative AI Platform" },
+      { name: "Blockchain Tracker" },
     ]
   },
-
-  // UPDATED SOCIALS LIST
   socials: [
-    { icon: Linkedin, href: "https://www.linkedin.com/in/chowdary369/", name: "LinkedIn" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/sivajich/", name: "LinkedIn" },
     { icon: Github, href: "https://github.com/Sivaji4829", name: "GitHub" },
   ]
 };
 
-// --- Reusable Components ---
+// --- Reusable UI Elements ---
 
-// Glassmorphism Card Wrapper (Using Tailwind Classes)
-const GlassCard = ({ children, className, ...props }) => (
+const GlassCard = ({ children, className = "", ...props }) => (
   <motion.div
-    className={`
-      bg-white/40 backdrop-blur-xl border border-white/60 shadow-lg rounded-xl
-      transition-all duration-300 ${className}
-    `}
+    className={`bg-white/60 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl ${className}`}
     {...props}
   >
     {children}
   </motion.div>
 );
 
-// Custom Hook for Scroll-based Animation 
-const useScrollAnimation = (threshold = 0.1) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: threshold });
-  const controls = useAnimation();
+const SectionHeader = ({ title, subtitle }) => (
+  <div className="text-center mb-12 px-4">
+    <motion.h2 
+      initial={{ opacity: 0, y: 15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="text-3xl md:text-4xl font-bold text-slate-900 mb-3 tracking-tight"
+    >
+      {title}
+    </motion.h2>
+    {subtitle && (
+      <motion.p 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.1 }}
+        className="text-slate-500 max-w-xl mx-auto text-base"
+      >
+        {subtitle}
+      </motion.p>
+    )}
+  </div>
+);
 
-  useEffect(() => {
-    if (isInView) {
-      controls.start("visible");
-    }
-  }, [controls, isInView]);
+// --- Components ---
 
-  const variants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
-    }
-  };
+const Loader = () => (
+  <motion.div 
+    className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
+    exit={{ opacity: 0, scale: 1.1 }}
+    transition={{ duration: 0.6, ease: "easeInOut" }}
+  >
+    <motion.div 
+      animate={{ rotate: 360 }}
+      transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+      className="w-12 h-12 border-2 border-slate-100 border-t-blue-600 rounded-full mb-4"
+    />
+    <motion.span 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="text-slate-400 font-medium text-xs tracking-widest uppercase"
+    >
+      Ready in a moment
+    </motion.span>
+  </motion.div>
+);
 
-  return { ref, controls, variants };
-};
-
-// Function to handle smooth scrolling
-const scrollToSection = (id) => {
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-}
-
-// 1. Navbar Component (Retained design for consistency)
 const Navbar = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
@@ -175,818 +122,389 @@ const Navbar = () => {
   
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
+      setIsScrolled(window.scrollY > 50);
       const sections = ['home', 'about', 'services', 'projects', 'certifications', 'contact']; 
-      
-      setIsScrolled(scrollY > 50);
-
       sections.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-          if (scrollY >= element.offsetTop - 150 && scrollY < element.offsetTop + element.offsetHeight - 150) {
-            setActiveSection(id);
-          }
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 200 && window.scrollY < el.offsetTop + el.offsetHeight - 200) {
+          setActiveSection(id);
         }
       });
     };
-
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setIsDropdownOpen(false);
     };
-
     window.addEventListener('scroll', handleScroll);
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mousedown', handleClickOutside);
     }
   }, []);
 
-  const simpleLinks = [
+  const navLinks = [
     { id: 'home', icon: Home, label: 'Home' },
     { id: 'about', icon: User, label: 'About' },
-    { id: 'certifications', icon: Award, label: 'Certifications' },
+    { id: 'certifications', icon: Award, label: 'Awards' },
     { id: 'contact', icon: Mail, label: 'Contact' },
   ];
-  
-  const dropdownItems = [
-    { id: 'services', icon: Lightbulb, label: 'Services' },
-    { id: 'projects', icon: Folder, label: 'Projects' },
-  ];
 
-  const handleLinkClick = (id) => {
-    scrollToSection(id);
-    setActiveSection(id);
+  const handleNav = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setIsDropdownOpen(false);
-  }
-
-  const isWorkActive = activeSection === 'services' || activeSection === 'projects';
-
-  const NavItem = ({ link, isActive, children, isDropdownTrigger = false }) => (
-    <div className={`relative flex items-center ${isDropdownTrigger ? 'flex flex-col items-center' : ''}`} ref={isDropdownTrigger ? dropdownRef : null}>
-      <button
-        onClick={isDropdownTrigger ? () => setIsDropdownOpen(!isDropdownOpen) : (e) => { e.preventDefault(); handleLinkClick(link.id); }}
-        className={`
-          flex items-center px-3 py-2 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap
-          ${isActive
-            // 3D Pill Style
-            ? 'bg-blue-600 text-white shadow-[0_12px_30px_rgba(37,99,235,0.55)]'
-            : 'text-slate-700 hover:bg-blue-50 hover:text-blue-600'
-          }
-        `}
-      >
-        <link.icon className="w-4 h-4 sm:w-5 sm:h-5 mr-0 sm:mr-2" />
-        <span className="hidden sm:inline">{link.label}</span>
-        {isDropdownTrigger && <ChevronDown className={`w-4 h-4 ml-1 hidden sm:inline transition-transform ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`} />}
-      </button>
-
-      {/* Dropdown Content */}
-      {isDropdownTrigger && isDropdownOpen && (
-        <GlassCard 
-          className="
-            absolute top-full mt-2
-            w-44
-            origin-top py-2
-            z-50
-            text-left
-            rounded-xl
-            bg-white/100
-            backdrop-blur-2xl
-            border border-white/80
-            shadow-[0_8px_35px_rgba(0,0,0,0.12)]
-          "
-          initial={{ opacity: 0, scaleY: 0.9, y: -6 }}
-          animate={{ opacity: 1, scaleY: 1, y: 0 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-        >
-          {children}
-        </GlassCard>
-      )}
-    </div>
-  );
+  };
 
   return (
-    <div
-      className={`
-        fixed inset-x-0 
-        z-50 
-        flex justify-center 
-        pointer-events-none
-        ${isScrolled ? "top-3 sm:top-4" : "top-6 sm:top-8"}
-      `}
-    >
-      <GlassCard
-        className="
-          pointer-events-auto
-          rounded-full
-          px-3 py-2 sm:px-4 sm:py-3
-          max-w-[94%] sm:max-w-3xl
-          border border-white/70
-          bg-white/80
-          backdrop-blur-xl
-          shadow-[0_18px_45px_rgba(15,23,42,0.18)]
-          transition-all duration-300
-          scale-100
-        "
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 90, delay: 0.3 }}
-      >
-        <nav
-          className="
-            flex items-center justify-between
-            gap-1.5 sm:gap-3
-          "
-        >
-          {/* Left: Home, About */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {simpleLinks.slice(0, 2).map((link) => (
-              <NavItem
-                key={link.id}
-                link={link}
-                isActive={activeSection === link.id}
-              />
-            ))}
-          </div>
+    <div className={`fixed inset-x-0 z-50 flex justify-center pointer-events-none transition-all duration-500 ${isScrolled ? "top-4" : "top-8"}`}>
+      <GlassCard className="pointer-events-auto rounded-full px-2 py-1.5 flex items-center gap-1 border-white/40 shadow-xl backdrop-blur-xl">
+        {navLinks.slice(0, 2).map((link) => (
+          <button 
+            key={link.id}
+            onClick={() => handleNav(link.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${activeSection === link.id ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600 hover:bg-slate-100'}`}
+          >
+            <link.icon className="w-4 h-4" />
+            <span className="hidden sm:inline">{link.label}</span>
+          </button>
+        ))}
 
-          {/* Center: Work dropdown */}
-          <div className="flex items-center">
-            <NavItem
-              link={{ id: "work", icon: Folder, label: "Work" }}
-              isActive={isWorkActive}
-              isDropdownTrigger={true}
-            >
-              {dropdownItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleLinkClick(item.id);
-                  }}
-                  className="
-                    flex items-center gap-2
-                    w-full px-3 py-2
-                    text-sm text-slate-700
-                    hover:bg-blue-50 hover:text-blue-600
-                    transition-colors
-                  "
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
+        <div className="relative" ref={dropdownRef}>
+          <button 
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${activeSection === 'services' || activeSection === 'projects' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600 hover:bg-slate-100'}`}
+          >
+            <Folder className="w-4 h-4" />
+            <span className="hidden sm:inline">Work</span>
+            <ChevronDown className={`w-3 h-3 transition-transform ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
+          </button>
+          <AnimatePresence>
+            {isDropdownOpen && (
+              <GlassCard className="absolute top-full mt-4 w-40 left-1/2 -translate-x-1/2 py-2 overflow-hidden border-white shadow-2xl origin-top rounded-2xl" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+                <button onClick={() => handleNav('services')} className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-left">
+                  <Lightbulb className="w-3.5 h-3.5" /> Services
                 </button>
-              ))}
-            </NavItem>
-          </div>
+                <button onClick={() => handleNav('projects')} className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-left">
+                  <Globe className="w-3.5 h-3.5" /> Projects
+                </button>
+              </GlassCard>
+            )}
+          </AnimatePresence>
+        </div>
 
-          {/* Right: Certifications, Contact */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {simpleLinks.slice(2).map((link) => (
-              <NavItem
-                key={link.id}
-                link={link}
-                isActive={activeSection === link.id}
-              />
-            ))}
-          </div>
-        </nav>
+        {navLinks.slice(2).map((link) => (
+          <button 
+            key={link.id}
+            onClick={() => handleNav(link.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${activeSection === link.id ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600 hover:bg-slate-100'}`}
+          >
+            <link.icon className="w-4 h-4" />
+            <span className="hidden sm:inline">{link.label}</span>
+          </button>
+        ))}
       </GlassCard>
     </div>
   );
 };
 
-// 2. Hero Section Component (Rewritten for guaranteed background image visibility)
 const Hero = () => {
-  const [taglineIndex, setTaglineIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState('');
+  const [text, setText] = useState('');
+  const [index, setIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const typingSpeed = 70;
-  const deletingSpeed = 40;
-  const delay = 1500;
-
-  const currentTagline = portfolioData.taglines[taglineIndex];
 
   useEffect(() => {
-    let timer;
-
-    if (isDeleting) {
-      if (displayedText.length > 0) {
-        timer = setTimeout(() => {
-          setDisplayedText(prev => prev.substring(0, prev.length - 1));
-        }, deletingSpeed);
+    const currentTag = portfolioData.taglines[index];
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        setText(currentTag.substring(0, text.length + 1));
+        if (text === currentTag) setTimeout(() => setIsDeleting(true), 2000);
       } else {
-        setIsDeleting(false);
-        setTaglineIndex(prev => (prev + 1) % portfolioData.taglines.length);
+        setText(currentTag.substring(0, text.length - 1));
+        if (text === '') {
+          setIsDeleting(false);
+          setIndex((index + 1) % portfolioData.taglines.length);
+        }
       }
-    } else {
-      if (displayedText.length < currentTagline.length) {
-        timer = setTimeout(() => {
-          setDisplayedText(prev => prev + currentTagline[prev.length]);
-        }, typingSpeed);
-      } else {
-        timer = setTimeout(() => {
-          setIsDeleting(true);
-        }, delay);
-      }
-    }
-
-    return () => clearTimeout(timer);
-  }, [displayedText, isDeleting, taglineIndex, currentTagline]);
+    }, isDeleting ? 30 : 60);
+    return () => clearTimeout(timeout);
+  }, [text, isDeleting, index]);
 
   return (
-    <motion.section
-      id="home"
-      // REMOVED pt-32, using min-h-screen to ensure background covers viewport
-      className="relative min-h-screen flex flex-col justify-center items-center text-center p-4 text-white" 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-    >
-      {/* Background Image Layer (Guaranteed to load) */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center" 
-        style={{ 
-            backgroundImage: `url('${HERO_BACKGROUND_URL}')`,
-            // Removed internal padding as it caused layout issues. The fixed navbar spacing handles this.
-        }} 
-        aria-hidden="true"
-      >
-        {/* Soft, dark overlay to increase text contrast and enable glassmorphism effect */}
-        <div className="absolute inset-0 bg-gray-900/40" aria-hidden="true"></div>
+    <section id="home" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${HERO_BACKGROUND_URL}')` }}>
+        <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px]" />
       </div>
-      
-      {/* Semi-transparent White Overlay (Reduced opacity for better image visibility) */}
-      <div className="absolute inset-0 bg-white/40" aria-hidden="true"></div> 
-      
-      {/* Content Layer */}
-      <motion.div
-        className="relative z-10 text-gray-900 pt-24" // Added top padding to the content layer to push it down
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 50, delay: 0.5 }}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-slate-50" />
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="relative z-10 px-6 flex flex-col items-center"
       >
-        <div className="w-32 h-32 mx-auto rounded-full bg-blue-200 border-4 border-white shadow-xl overflow-hidden mb-6">
-          <img
-            src="profile2.png"
-            alt="Sivaji Chinnam Profile"
-            className="w-full h-full object-cover"
-            onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/128x128/D0E7FF/0F4C81?text=SC" }}
-          />
+        <div className="w-32 h-32 rounded-full border-4 border-white shadow-xl overflow-hidden mb-8 group transition-transform duration-500 hover:scale-105">
+          <img src="profile2.png" alt={portfolioData.name} className="w-full h-full object-cover" onError={(e) => e.target.src="https://placehold.co/120x120/D0E7FF/0F4C81?text=SC"} />
+        </div>
+        
+        <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight mb-4 text-center leading-tight">
+          {portfolioData.name.split(' ')[0]} <span className="text-blue-600">{portfolioData.name.split(' ')[1]}</span>
+        </h1>
+        
+        <p className="text-lg md:text-xl font-medium text-slate-600 mb-8 max-w-lg mx-auto text-center leading-relaxed">
+          {portfolioData.role}
+        </p>
+        
+        <div className="bg-white/40 border border-white/60 px-6 py-2 rounded-full mb-12 shadow-sm">
+          <span className="font-mono text-blue-700 text-sm font-bold">
+            {text}<span className="animate-blink">|</span>
+          </span>
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-extrabold mb-2">
-          {portfolioData.name}
-        </h1>
-
-        <motion.p
-          className="text-2xl md:text-3xl font-light text-blue-700 mb-4"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-        >
-          {portfolioData.role}
-        </motion.p>
-
-        <GlassCard className="inline-block p-3 mb-8">
-          <p className="text-lg font-mono text-gray-700 h-6 whitespace-nowrap">
-            {displayedText}
-            <span className="animate-blink inline-block w-0.5 h-6 ml-0.5 bg-gray-700"></span>
-          </p>
-        </GlassCard>
-
-        <div className="flex justify-center space-x-4">
-          <motion.a
-            href="#projects"
-            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-full shadow-lg shadow-blue-500/50 hover:bg-blue-600 transition duration-300 transform hover:scale-105"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 200, delay: 1.2 }}
-          >
-            View Projects
-          </motion.a>
-          <motion.a
-            href="#contact"
-            className="px-6 py-3 bg-white text-blue-500 font-semibold rounded-full border border-blue-500 hover:bg-blue-50 transition duration-300 transform hover:scale-105"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 200, delay: 1.4 }}
-          >
-            Get In Touch
-          </motion.a>
+        <div className="flex flex-wrap justify-center gap-4">
+          <button onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })} className="px-8 py-3 bg-blue-600 text-white rounded-full font-bold text-sm shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2">
+            View Projects <ArrowRight className="w-4 h-4" />
+          </button>
+          <button onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })} className="px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-full font-bold text-sm shadow-sm hover:shadow-md transition-all">
+            Contact Me
+          </button>
         </div>
       </motion.div>
-    </motion.section>
+    </section>
   );
 };
 
-// 3. Project Card Component
-const ProjectCard = ({ project }) => {
+const ProjectsSection = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.4 });
+
   return (
-    <GlassCard
-      className="p-5 flex flex-col cursor-pointer min-h-[450px] transform hover:scale-[1.05] hover:rotate-1 hover:shadow-2xl" 
-      whileHover={{ boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)" }}
-      transition={{ type: "spring", stiffness: 300, damping: 10 }}
-    >
-      <div className="h-40 overflow-hidden rounded-lg mb-4">
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-cover transform hover:scale-110 transition duration-500"
-          onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x250/C4D4E7/151C34?text=Placeholder+Image" }}
-        />
-      </div>
-      <h3 className="text-xl font-bold text-gray-800 mb-2">{project.title}</h3>
-      <p className="text-gray-600 flex-grow mb-4">{project.description}</p>
-      
-      <div className="flex flex-wrap gap-2 mt-auto pb-4">
-        {project.tags.map(tag => (
-          <span key={tag} className="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-600 rounded-full">
-            {tag}
-          </span>
-        ))}
-      </div>
+    <section id="projects" className="py-24 px-4 bg-white relative" ref={ref}>
+      <div className="max-w-4xl mx-auto">
+        <SectionHeader title="Featured Work" subtitle="A collection of specialized tools and AI-driven platforms. Visit the workspace to explore them all." />
+        
+        <div className="relative h-[400px] flex items-center justify-center mt-10">
+          {/* Subtle Background Rings */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-[0.05]">
+             <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="w-[280px] h-[280px] border border-blue-600 rounded-full" />
+             <motion.div animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} className="absolute w-[400px] h-[400px] border border-blue-400 rounded-full" />
+          </div>
 
-      {/* Demo and Code Buttons (Links) */}
-      <div className="flex justify-between space-x-3 mt-auto border-t border-white/50 pt-4">
-        <a 
-            href={project.demoLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center space-x-1 px-4 py-2 text-sm font-semibold rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition duration-300 shadow-md shadow-blue-300/50"
-        >
-            <ExternalLink className="w-4 h-4" />
-            <span>Live Demo</span>
-        </a>
-        <a 
-            href={project.codeLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center space-x-1 px-4 py-2 text-sm font-semibold rounded-lg bg-white/70 text-gray-700 border border-white/80 hover:bg-white/90 transition duration-300 shadow-md"
-        >
-            <CodeIcon className="w-4 h-4" />
-            <span>Code</span>
-        </a>
+          {/* Floating Project Labels */}
+          {portfolioData.projectNames.map((name, i) => {
+            const angle = (i / portfolioData.projectNames.length) * Math.PI * 2;
+            const radius = 180; 
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+
+            return (
+              <motion.div
+                key={name}
+                initial={{ opacity: 0, x: 0, y: 0 }}
+                animate={isInView ? { opacity: 1, x, y } : {}}
+                transition={{ delay: i * 0.1, duration: 0.8 }}
+                className="absolute hidden md:block"
+              >
+                <div className="px-4 py-2 bg-slate-50 border border-slate-100 shadow-sm rounded-full text-slate-600 font-bold text-[10px] uppercase tracking-wide whitespace-nowrap">
+                  {name}
+                </div>
+              </motion.div>
+            );
+          })}
+
+          <div className="md:hidden flex flex-wrap justify-center gap-2 absolute top-0 w-full">
+            {portfolioData.projectNames.map((name, i) => (
+              <span key={i} className="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-[9px] font-bold text-slate-400 uppercase">{name}</span>
+            ))}
+          </div>
+
+          {/* Main Redirect Button */}
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={isInView ? { scale: 1, opacity: 1 } : {}}
+            transition={{ delay: 0.6 }}
+            className="z-10"
+          >
+            <a 
+              href="https://my-project-portfolio-omega.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center justify-center w-52 h-52 bg-white border border-blue-50 rounded-full shadow-2xl hover:shadow-blue-100 transition-all duration-500 hover:scale-105 active:scale-95"
+            >
+              <Rocket className="text-blue-600 w-8 h-8 mb-4 group-hover:scale-110 transition-transform" />
+              <span className="text-sm font-black text-slate-800 tracking-tighter uppercase mb-1">Open Workspace</span>
+              <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1">Portfolio Hub <ExternalLink className="w-3 h-3" /></span>
+            </a>
+          </motion.div>
+        </div>
       </div>
-    </GlassCard>
+    </section>
   );
 };
 
-// 4. Contact Form Component
-const ContactForm = () => {
-  const { ref, controls, variants } = useScrollAnimation();
+const AboutSection = () => (
+  <section id="about" className="py-24 px-4 bg-slate-50">
+    <div className="max-w-5xl mx-auto">
+      <SectionHeader title="Technical Identity" />
+      <div className="grid md:grid-cols-2 gap-8">
+        <GlassCard className="p-8">
+          <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-blue-600"><Sparkles className="w-5 h-5" /> Mission</h3>
+          <p className="text-slate-600 text-sm leading-relaxed mb-6">{portfolioData.mission}</p>
+          <div className="space-y-3">
+            {portfolioData.strengths.map((s, i) => (
+              <div key={i} className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                <CheckCircle className="text-green-500 w-4 h-4" /> {s}
+              </div>
+            ))}
+          </div>
+        </GlassCard>
+        <div className="space-y-6">
+          <GlassCard className="p-6">
+             <h3 className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-4">Tech Stack</h3>
+             <div className="flex flex-wrap gap-2">
+               {Object.values(portfolioData.technicalProficiency).flat().map((skill, i) => (
+                 <span key={i} className="px-3 py-1 bg-white border border-slate-100 rounded-lg text-xs font-bold text-slate-500">{skill}</span>
+               ))}
+             </div>
+          </GlassCard>
+          <GlassCard className="p-6">
+             <h3 className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-4">Education</h3>
+             {portfolioData.education.map((edu, i) => (
+               <div key={i}>
+                 <p className="text-sm font-bold text-slate-800">{edu.title}</p>
+                 <p className="text-xs text-slate-400">{edu.institution} | {edu.year}</p>
+               </div>
+             ))}
+          </GlassCard>
+        </div>
+      </div>
+    </div>
+  </section>
+);
 
-  // New function to handle form submission via mailto link
-  const handleMailtoSubmit = (e) => {
+const ServicesSection = () => (
+  <section id="services" className="py-24 px-4 bg-white">
+    <div className="max-w-5xl mx-auto">
+      <SectionHeader title="CreaGen Solutions" subtitle="Specialized AI and Full Stack consultancy for modern business challenges." />
+      <div className="grid sm:grid-cols-2 gap-6">
+        <GlassCard className="p-8 bg-slate-50 border-none">
+          <TrendingUp className="text-blue-600 w-8 h-8 mb-6" />
+          <h3 className="text-xl font-bold mb-4">Current Focus</h3>
+          <ul className="space-y-3">
+            {portfolioData.creagen.completedProjects.map((p, i) => (
+              <li key={i} className="text-sm font-bold text-slate-600 flex items-center gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full" /> {p.name}</li>
+            ))}
+          </ul>
+        </GlassCard>
+        <GlassCard className="p-8 bg-blue-600 text-white border-none shadow-blue-100">
+           <h3 className="text-xl font-bold mb-4">Roadmap</h3>
+           <p className="text-blue-50 text-sm mb-6 opacity-80 italic">"{portfolioData.creagen.vision}"</p>
+           <ul className="space-y-3">
+             {portfolioData.creagen.upcomingProjects.map((p, i) => (
+               <li key={i} className="text-sm font-bold flex items-center gap-2"><div className="w-1.5 h-1.5 bg-white rounded-full" /> {p.name}</li>
+             ))}
+           </ul>
+        </GlassCard>
+      </div>
+    </div>
+  </section>
+);
+
+const AchievementsSection = () => (
+  <section id="certifications" className="py-24 px-4 bg-slate-50">
+    <div className="max-w-5xl mx-auto">
+      <SectionHeader title="Achievements" />
+      <div className="grid md:grid-cols-2 gap-8">
+        <div className="space-y-4">
+          {portfolioData.achievements.map((item, i) => (
+            <GlassCard key={i} className="p-4 flex items-center gap-4">
+              <div className="bg-green-100 p-1.5 rounded-lg"><CheckCircle className="text-green-600 w-4 h-4" /></div>
+              <span className="text-sm font-bold text-slate-700">{item.name}</span>
+            </GlassCard>
+          ))}
+        </div>
+        <div className="space-y-4">
+          {portfolioData.events.map((item, i) => (
+            <GlassCard key={i} className="p-4 flex items-center gap-4">
+              <div className="bg-blue-100 p-1.5 rounded-lg"><item.icon className="text-blue-600 w-4 h-4" /></div>
+              <div>
+                <p className="text-sm font-bold text-slate-700">{item.name}</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest">{item.role}</p>
+              </div>
+            </GlassCard>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const ContactSection = () => {
+  const handleMailto = (e) => {
     e.preventDefault();
-    
-    // In a real application, you would collect and validate form data here.
-    const form = e.target.closest('form');
-    const name = form.querySelector('input[type="text"]').value;
-    const email = form.querySelector('input[type="email"]').value;
-    const message = form.querySelector('textarea').value;
-
-    const recipient = "sivajichinnam2459@gmail.com";
-    const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-
-    const mailtoLink = `mailto:${recipient}?subject=${subject}&body=${body}`;
-    
-    // Redirects user to their mail client
-    window.location.href = mailtoLink;
+    const fd = new FormData(e.target);
+    const body = `Name: ${fd.get('name')}\nEmail: ${fd.get('email')}\nMessage: ${fd.get('message')}`;
+    window.location.href = `mailto:sivajichinnam2459@gmail.com?subject=Portfolio Message&body=${encodeURIComponent(body)}`;
   };
 
   return (
-    <motion.div
-      id="contact"
-      className="container mx-auto p-4 md:p-8 pt-20 max-w-7xl min-h-[500px]" // Added min-h
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-    >
-      <h2 className="text-4xl font-bold text-gray-900 text-center mb-10">Get In Touch</h2>
-
-      <div className="max-w-3xl mx-auto grid md:grid-cols-2 gap-8">
-        {/* Contact Form (Redirects to mailto) */}
-        <GlassCard className="p-6">
-          <form className="space-y-4" onSubmit={handleMailtoSubmit}>
-            <h3 className="text-2xl font-semibold text-gray-800 mb-4">Send a Message</h3>
-            <div>
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="w-full p-3 rounded-lg bg-white/70 border border-white/80 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300"
-                required
-              />
-            </div>
-            <div>
-              <input
-                type="email"
-                placeholder="Your Email"
-                className="w-full p-3 rounded-lg bg-white/70 border border-white/80 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300"
-                required
-              />
-            </div>
-            <div>
-              <textarea
-                placeholder="Your Message"
-                rows="4"
-                className="w-full p-3 rounded-lg bg-white/70 border border-white/80 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300"
-                required
-              ></textarea>
-            </div>
-            <button
-              type="submit"
-              className="w-full px-4 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md shadow-blue-500/50 hover:bg-blue-600 transition duration-300"
-            >
-              Send Message
-            </button>
-            <p className="text-sm text-center text-gray-500">
-              *Submitting will open your default email client to send the message.
-            </p>
-          </form>
-        </GlassCard>
-
-        {/* Social Icons */}
-        <GlassCard className="p-6 flex flex-col justify-center items-center">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-6">Connect with Me</h3>
-          <div className="flex space-x-6">
-            {portfolioData.socials.map((social) => (
-              <motion.a
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-700 hover:text-blue-600 transition duration-300"
-                whileHover={{ scale: 1.2, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <social.icon className="w-8 h-8 md:w-10 md:h-10" />
-                <span className="sr-only">{social.name}</span>
-              </motion.a>
-            ))}
-          </div>
-        </GlassCard>
-      </div>
-    </motion.div>
-  );
-};
-
-// 5. Footer Component
-const Footer = () => {
-  return (
-    <footer className="w-full p-4 mt-12 bg-gray-100/70 backdrop-blur-sm border-t border-white/60 text-center text-gray-600">
-      <p>&copy; {new Date().getFullYear()} {portfolioData.name}. All rights reserved.</p>
-      <p className="text-xs mt-1">
-        Built with React, Tailwind CSS, and Framer Motion for a smooth UX.
-      </p>
-    </footer>
-  );
-};
-
-
-// --- Section Components ---
-
-// Component for displaying categorized skills
-const ProficiencyGroup = ({ title, skills }) => (
-    <div className="mb-6">
-        <h4 className="text-xl font-semibold text-gray-700 mb-2 border-b border-blue-100 pb-1">{title}</h4>
-        <div className="flex flex-wrap gap-2">
-            {skills.map((skill, i) => (
-                <span key={i} className="px-3 py-1 text-sm font-medium bg-blue-100/80 text-blue-800 rounded-full backdrop-blur-sm shadow-sm transition duration-200 hover:bg-blue-200">
-                    {skill}
-                </span>
-            ))}
-        </div>
-    </div>
-);
-
-const AboutSection = () => {
-  const { ref, controls, variants } = useScrollAnimation();
-
-  return (
-    <motion.section
-      id="about"
-      className="container mx-auto p-4 md:p-8 pt-20 max-w-7xl min-h-screen" 
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-    >
-      <h2 className="text-4xl font-bold text-gray-900 text-center mb-10">About Me</h2>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Mission & Strengths */}
-        <motion.div initial="hidden" animate="visible" transition={{ staggerChildren: 0.1, delayChildren: 0.1, ease: "easeOut" }} variants={variants}>
-            <GlassCard className="p-6 col-span-1 flex flex-col justify-between">
-              <div>
-                <h3 className="text-2xl font-semibold text-blue-600 mb-4">My Mission</h3>
-                <p className="text-gray-700 leading-relaxed mb-6">{portfolioData.mission}</p>
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">Key Strengths</h3>
-                <ul className="space-y-2 text-gray-700 list-none p-0">
-                  {portfolioData.strengths.map((s, i) => (
-                    <motion.li key={i} className="flex items-center space-x-2" variants={variants} transition={{ duration: 0.4 }}>
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span>{s}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-            </GlassCard>
-        </motion.div>
-
-        {/* Technical Proficiency & Education */}
-        <div className="lg:col-span-2 space-y-8">
-          <motion.div initial="hidden" animate="visible" transition={{ staggerChildren: 0.05, delayChildren: 0.2, ease: "easeOut" }} variants={variants}>
-            <GlassCard className="p-6">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-6">Technical Proficiency</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-                  <ProficiencyGroup 
-                      title="Languages & Markup" 
-                      skills={portfolioData.technicalProficiency.languages} 
-                  />
-                  <ProficiencyGroup 
-                      title="Frameworks & Libraries" 
-                      skills={portfolioData.technicalProficiency.frameworks} 
-                  />
-                  <ProficiencyGroup 
-                      title="Databases" 
-                      skills={portfolioData.technicalProficiency.databases} 
-                  />
-                  <ProficiencyGroup 
-                      title="Tools & Platforms" 
-                      skills={portfolioData.technicalProficiency.tools} 
-                  />
-                  <ProficiencyGroup 
-                      title="AI & Machine Learning" 
-                      skills={portfolioData.technicalProficiency.aiMl} 
-                  />
-              </div>
-            </GlassCard>
-          </motion.div>
-
-          {/* Education */}
-          <motion.div initial="hidden" animate="visible" transition={{ delayChildren: 0.4 }} variants={variants}>
-            <GlassCard className="p-6">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4">Education</h3>
-              <ol className="relative border-l border-blue-200 ml-2 list-none p-0">
-                {portfolioData.education.map((edu, i) => (
-                  <motion.li key={i} className="mb-6 ml-6" variants={variants} transition={{ duration: 0.5 }}>
-                    <span className="absolute flex items-center justify-center w-3 h-3 bg-blue-200 rounded-full -left-1.5 ring-4 ring-white/60"></span>
-                    <h4 className="flex items-center mb-1 text-lg font-semibold text-gray-800">{edu.title}</h4>
-                    <p className="text-sm font-medium text-blue-600">{edu.institution}</p>
-                    <p className="text-sm text-gray-500">{edu.year}</p>
-                  </motion.li>
-                ))}
-              </ol>
-            </GlassCard>
-          </motion.div>
-        </div>
-      </div>
-    </motion.section>
-  );
-};
-
-// Services Section
-const ServicesSection = () => {
-    const { ref, controls, variants } = useScrollAnimation();
-
-    const ServiceProjectItem = ({ project, Icon, color, isCompleted }) => (
-        <GlassCard 
-            className={`p-4 flex flex-col justify-between cursor-pointer transition-all duration-300 
-                        ${isCompleted ? 'hover:shadow-lg hover:shadow-green-100' : 'hover:shadow-lg hover:shadow-orange-100'}`}
-            whileHover={{ translateY: isCompleted ? -3 : 0 }}
-        >
-            <div className="flex items-start space-x-3 mb-3">
-                <Icon className={`w-5 h-5 flex-shrink-0 mt-1 ${color}`} />
-                <p className="text-lg font-medium text-gray-800 leading-tight">{project.name}</p>
-            </div>
-            
-            {/* Added Link Button for Completed Projects */}
-            {isCompleted && project.targetId && (
-                <a 
-                    href={project.targetId}
-                    onClick={(e) => { 
-                        e.preventDefault(); 
-                        document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="flex items-center justify-center space-x-2 px-3 py-1.5 text-sm font-semibold rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200 transition duration-200 mt-2 self-start"
-                >
-                    <span>View Details</span>
-                    <ArrowRight className="w-4 h-4" />
-                </a>
-            )}
-            
-            {!isCompleted && (
-                <p className="text-xs text-gray-500 mt-1">In Planning / Development Phase</p>
-            )}
-        </GlassCard>
-    );
-
-    return (
-        <motion.section
-            id="services"
-            className="container mx-auto p-4 md:p-8 pt-20 max-w-7xl min-h-screen" 
-            ref={ref}
-            initial="hidden"
-            animate={controls}
-            variants={variants}
-        >
-            <h2 className="text-4xl font-bold text-gray-900 text-center mb-10">CreaGen Solutions: Freelance Services</h2>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Side: Briefing and Vision */}
-                <motion.div variants={variants} transition={{ duration: 0.6, delay: 0.1 }}>
-                    <GlassCard className="p-6 lg:col-span-1 flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center space-x-3 mb-4">
-                                <Lightbulb className="w-8 h-8 text-blue-600" />
-                                <h3 className="text-2xl font-semibold text-blue-600">Our Vision</h3>
-                            </div>
-                            <p className="text-gray-700 leading-relaxed mb-6">{portfolioData.mission}</p>
-                            <p className="text-sm text-gray-600 mt-4 border-t pt-3">
-                                Providing solutions where innovation meets execution, ensuring robust and scalable results.
-                            </p>
-                        </div>
-                    </GlassCard>
-                </motion.div>
-
-                {/* Right Side: Completed and Upcoming Projects */}
-                <div className="lg:col-span-2 space-y-8">
-                    {/* Completed Projects */}
-                    <motion.div initial="hidden" animate="visible" transition={{ staggerChildren: 0.1, delayChildren: 0.3 }} variants={variants}>
-                        <GlassCard className="p-6">
-                            <div className="flex items-center space-x-3 mb-4">
-                                <CheckCircle className="w-6 h-6 text-green-600" />
-                                <h3 className="text-2xl font-semibold text-gray-800">Completed Projects</h3>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {portfolioData.creagen.completedProjects.map((project, i) => (
-                                    <motion.div key={i} variants={variants} transition={{ duration: 0.4 }}>
-                                        <ServiceProjectItem 
-                                            project={project}
-                                            Icon={CheckCircle}
-                                            color="text-green-600"
-                                            isCompleted={true}
-                                        />
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </GlassCard>
-                    </motion.div>
-
-                    {/* Upcoming Projects */}
-                    <motion.div initial="hidden" animate="visible" transition={{ staggerChildren: 0.1, delayChildren: 0.5 }} variants={variants}>
-                        <GlassCard className="p-6">
-                            <div className="flex items-center space-x-3 mb-4">
-                                <TrendingUp className="w-6 h-6 text-orange-500" />
-                                <h3 className="text-2xl font-semibold text-gray-800">Upcoming Projects (Roadmap)</h3>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {portfolioData.creagen.upcomingProjects.map((project, i) => (
-                                    <motion.div key={i} variants={variants} transition={{ duration: 0.4 }}>
-                                        <ServiceProjectItem 
-                                            project={project}
-                                            Icon={TrendingUp}
-                                            color="text-orange-500"
-                                            isCompleted={false}
-                                        />
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </GlassCard>
-                    </motion.div>
-                </div>
-            </div>
-        </motion.section>
-    );
-}
-
-const ProjectsSection = () => {
-  const { ref, controls, variants } = useScrollAnimation(0.2);
-
-  return (
-    <motion.section
-      id="projects"
-      className="container mx-auto p-4 md:p-8 pt-20 max-w-7xl min-h-[100vh]" // Aggressively setting min-height
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-    >
-      <h2 className="text-4xl font-bold text-gray-900 text-center mb-10">Featured Projects</h2>
-      {/* Content rendering check: If portfolioData.projects is empty, display a placeholder */}
-      {portfolioData.projects && portfolioData.projects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {portfolioData.projects.map((project, i) => (
-              <motion.div 
-                key={i} 
-                className="w-full"
-                initial="hidden"
-                animate={controls}
-                variants={{
-                    hidden: { opacity: 0, y: 50 },
-                    visible: {
-                        opacity: 1,
-                        y: 0,
-                        transition: { 
-                            delay: i * 0.1 + 0.3, 
-                            duration: 0.6, 
-                            ease: "easeOut" 
-                        }
-                    }
-                }}
-              >
-                <ProjectCard project={project} />
-              </motion.div>
-            ))}
-          </div>
-      ) : (
-          <GlassCard className="p-8 text-center text-gray-600">
-              <Folder className="w-12 h-12 mx-auto mb-4 text-blue-500" />
-              <p className="text-xl font-semibold">No featured projects available right now.</p>
-              <p className="text-sm">Please check back soon for updates!</p>
+    <section id="contact" className="py-24 px-4 bg-white">
+      <div className="max-w-4xl mx-auto">
+        <SectionHeader title="Contact" subtitle="Let's build something significant together." />
+        <div className="grid md:grid-cols-2 gap-10 items-start">
+          <GlassCard className="p-8">
+            <form className="space-y-4" onSubmit={handleMailto}>
+              <input name="name" type="text" placeholder="Your Name" className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none focus:border-blue-600 text-sm font-bold" required />
+              <input name="email" type="email" placeholder="Your Email" className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none focus:border-blue-600 text-sm font-bold" required />
+              <textarea name="message" placeholder="Briefly describe your interest..." rows="3" className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none focus:border-blue-600 text-sm font-bold" required></textarea>
+              <button type="submit" className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-black transition-all active:scale-95 text-xs uppercase tracking-widest">Send Initiative</button>
+            </form>
           </GlassCard>
-      )}
-    </motion.section>
+          <div className="space-y-8 py-4">
+            <div className="flex gap-4">
+              {portfolioData.socials.map((s, i) => (
+                <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="p-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md hover:scale-105 transition-all text-blue-600">
+                  <s.icon className="w-6 h-6" />
+                </a>
+              ))}
+            </div>
+            <div className="text-slate-400 font-bold text-xs uppercase tracking-widest border-l-2 border-blue-600 pl-4">
+              Andhra Pradesh, India
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
-const AchievementsSection = () => {
-  const { ref, controls, variants } = useScrollAnimation(0.1);
-
-  const AchievementItem = ({ item, Icon }) => (
-    <GlassCard 
-      className="p-4 flex items-start space-x-4 h-full min-h-[120px] transition-all duration-300" // Added transition-all
-      whileHover={{ boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)", translateY: -2 }}
-    >
-      <Icon className={`w-6 h-6 flex-shrink-0 mt-1 ${Icon === CheckCircle ? 'text-green-500' : 'text-blue-500'}`} />
-      <div>
-        <h4 className="text-lg font-semibold text-gray-800">{item.name}</h4>
-        {item.role && <p className="text-gray-600 font-medium">{item.role}</p>}
-        <p className="text-sm text-gray-500">{item.org || item.date}</p>
-      </div>
-    </GlassCard>
-  );
-
-  return (
-    <motion.section
-      id="certifications" // Renamed anchor to align with Navbar
-      className="container mx-auto p-4 md:p-8 pt-20 max-w-7xl min-h-screen" 
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-    >
-      <h2 className="text-4xl font-bold text-gray-900 text-center mb-10">Certifications & Activities</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        {/* Certifications (Mapping to portfolioData.achievements) */}
-        <div className="space-y-6">
-          <h3 className="text-2xl font-semibold text-blue-600 border-b pb-2 mb-4">Certifications</h3>
-          <motion.div initial="hidden" animate="visible" transition={{ staggerChildren: 0.1, delayChildren: 0.1 }} variants={variants}>
-            {portfolioData.achievements.map((item, i) => (
-              <motion.div key={i} className="w-full mb-4" variants={variants} transition={{ duration: 0.5 }}>
-                <AchievementItem item={item} Icon={CheckCircle} />
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Events & Activities (Mapping to portfolioData.events) */}
-        <div className="space-y-6">
-          <h3 className="text-2xl font-semibold text-blue-600 border-b pb-2 mb-4">Achievements & Activities</h3>
-          <motion.div initial="hidden" animate="visible" transition={{ staggerChildren: 0.1, delayChildren: 0.3 }} variants={variants}>
-            {portfolioData.events.map((item, i) => (
-              <motion.div key={i} className="w-full mb-4" variants={variants} transition={{ duration: 0.5 }}>
-                <AchievementItem item={item} Icon={item.icon} /> 
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </div>
-    </motion.section>
-  );
-};
-
-
-// --- Main Application Component ---
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="min-h-screen font-sans">
-      
+    <div className="min-h-screen font-sans bg-slate-50 selection:bg-blue-600 selection:text-white">
+      <AnimatePresence>
+        {loading && <Loader key="loader" />}
+      </AnimatePresence>
+
       <Navbar />
-      <main className=""> {/* REMOVED pt-24 */}
+      <main>
         <Hero />
         <AboutSection />
         <ServicesSection />
         <ProjectsSection />
         <AchievementsSection />
-        <ContactForm />
+        <ContactSection />
       </main>
-      <Footer />
+
+      <footer className="py-12 bg-white text-center border-t border-slate-100">
+        <p className="text-slate-300 font-bold text-[10px] uppercase tracking-[0.3em]">
+          &copy; {new Date().getFullYear()} {portfolioData.name}
+        </p>
+      </footer>
     </div>
   );
 };
