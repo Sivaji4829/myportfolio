@@ -4,7 +4,8 @@ import {
   Home, User, Folder, Mail, Linkedin, Github, 
   CheckCircle, Calendar, Users, Award, 
   ExternalLink, Lightbulb, TrendingUp, 
-  ArrowRight, ChevronDown, Rocket, Sparkles, Globe
+  ArrowRight, ChevronDown, Rocket, Sparkles, Globe,
+  Zap, Database, Cpu, ShieldCheck, Activity
 } from 'lucide-react'; 
 
 // Publicly accessible background for the Hero section
@@ -42,12 +43,20 @@ const portfolioData = {
   creagen: {
     vision: "To transform visionary ideas into functional digital realities.",
     completedProjects: [
-      { name: "Custom E-commerce API" },
-      { name: "Real-time Data Dashboard" },
+      { name: "Custom E-commerce API", desc: "Highly scalable RESTful architecture." },
+      { name: "Real-time Data Dashboard", desc: "Live visualization for sensor metrics." },
     ],
     upcomingProjects: [
-      { name: "Generative AI Platform" },
-      { name: "Blockchain Tracker" },
+      { 
+        name: "Generative AI Platform", 
+        desc: "Advanced LLM orchestration for automated enterprise workflows.",
+        icon: Cpu
+      },
+      { 
+        name: "Blockchain Tracker", 
+        desc: "Real-time distributed ledger analytics and security auditing.",
+        icon: ShieldCheck
+      },
     ]
   },
   socials: [
@@ -56,11 +65,62 @@ const portfolioData = {
   ]
 };
 
+// --- Global CSS Styles ---
+const GlobalStyles = () => (
+  <style dangerouslySetInnerHTML={{ __html: `
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .animate-blink {
+      animation: blink 1s step-end infinite;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      overflow-x: hidden;
+      width: 100%;
+      background-color: #f8fafc;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 10px;
+    }
+
+    .energy-ring {
+      position: fixed;
+      pointer-events: none;
+      border: 8px solid #3b82f6;
+      border-radius: 50%;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(1.05); }
+    }
+    .animate-pulse-slow {
+      animation: pulse-slow 4s ease-in-out infinite;
+    }
+  `}} />
+);
+
 // --- Reusable UI Elements ---
 
 const GlassCard = ({ children, className = "", ...props }) => (
   <motion.div
-    className={`bg-white/60 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl ${className}`}
+    className={`bg-white/70 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl ${className}`}
     {...props}
   >
     {children}
@@ -68,12 +128,12 @@ const GlassCard = ({ children, className = "", ...props }) => (
 );
 
 const SectionHeader = ({ title, subtitle }) => (
-  <div className="text-center mb-12 px-4">
+  <div className="text-center mb-12 px-4 relative z-10">
     <motion.h2 
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="text-3xl md:text-4xl font-bold text-slate-900 mb-3 tracking-tight"
+      className="text-3xl md:text-5xl font-black text-slate-900 mb-3 tracking-tight"
     >
       {title}
     </motion.h2>
@@ -83,7 +143,7 @@ const SectionHeader = ({ title, subtitle }) => (
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ delay: 0.1 }}
-        className="text-slate-500 max-w-xl mx-auto text-base"
+        className="text-slate-500 max-w-xl mx-auto text-sm md:text-base font-medium"
       >
         {subtitle}
       </motion.p>
@@ -91,26 +151,68 @@ const SectionHeader = ({ title, subtitle }) => (
   </div>
 );
 
-// --- Components ---
+const BackgroundPulse = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-100/30 rounded-full blur-[120px] animate-pulse-slow" />
+    <svg className="absolute inset-0 w-full h-full opacity-[0.05]" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#3b82f6" strokeWidth="1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid)" />
+    </svg>
+  </div>
+);
 
+// --- Modern Energy Loader Component ---
 const Loader = () => (
   <motion.div 
-    className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
+    className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-950"
     exit={{ opacity: 0, scale: 1.1 }}
-    transition={{ duration: 0.6, ease: "easeInOut" }}
+    transition={{ duration: 0.8, ease: "circOut" }}
   >
+    <div className="relative w-32 h-32 flex items-center justify-center">
+      {/* Dynamic Arcs */}
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 border-t-2 border-r-2 border-blue-500 rounded-full opacity-60"
+      />
+      <motion.div 
+        animate={{ rotate: -360 }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-4 border-b-2 border-l-2 border-blue-300 rounded-full opacity-40"
+      />
+      {/* Central Geometry */}
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.3, 1],
+          rotate: [45, 135, 225, 315, 405]
+        }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="w-10 h-10 bg-blue-600 shadow-[0_0_30px_rgba(37,99,235,0.8)] flex items-center justify-center rotate-45"
+      >
+        <Zap className="text-white w-5 h-5 -rotate-45" />
+      </motion.div>
+    </div>
     <motion.div 
-      animate={{ rotate: 360 }}
-      transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-      className="w-12 h-12 border-2 border-slate-100 border-t-blue-600 rounded-full mb-4"
-    />
-    <motion.span 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="text-slate-400 font-medium text-xs tracking-widest uppercase"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      className="mt-12 flex flex-col items-center"
     >
-      Ready in a moment
-    </motion.span>
+      <span className="text-blue-500 font-black text-[10px] tracking-[0.6em] uppercase mb-2">
+        Portfolio Loading..Just a moment..
+      </span>
+      <div className="w-40 h-1 bg-slate-900 rounded-full overflow-hidden">
+        <motion.div 
+          animate={{ x: [-160, 160] }}
+          transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
+          className="w-1/2 h-full bg-blue-500 shadow-[0_0_10px_#3b82f6]"
+        />
+      </div>
+    </motion.div>
   </motion.div>
 );
 
@@ -150,40 +252,46 @@ const Navbar = () => {
   ];
 
   const handleNav = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const target = document.getElementById(id);
+    if (target) {
+      window.scrollTo({
+        top: target.offsetTop - 100,
+        behavior: 'smooth'
+      });
+    }
     setIsDropdownOpen(false);
   };
 
   return (
-    <div className={`fixed inset-x-0 z-50 flex justify-center pointer-events-none transition-all duration-500 ${isScrolled ? "top-4" : "top-8"}`}>
-      <GlassCard className="pointer-events-auto rounded-full px-2 py-1.5 flex items-center gap-1 border-white/40 shadow-xl backdrop-blur-xl">
+    <div className={`fixed inset-x-0 z-[60] flex justify-center pointer-events-none transition-all duration-500 ${isScrolled ? "top-4 sm:top-6" : "top-8 sm:top-10"}`}>
+      <GlassCard className="pointer-events-auto rounded-full px-1.5 py-1.5 flex items-center gap-0.5 sm:gap-1 border-white/40 shadow-2xl backdrop-blur-2xl bg-white/40">
         {navLinks.slice(0, 2).map((link) => (
           <button 
             key={link.id}
             onClick={() => handleNav(link.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${activeSection === link.id ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600 hover:bg-slate-100'}`}
+            className={`flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all duration-300 ${activeSection === link.id ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600 hover:bg-white/50'}`}
           >
             <link.icon className="w-4 h-4" />
-            <span className="hidden sm:inline">{link.label}</span>
+            <span className="hidden sm:inline uppercase tracking-widest">{link.label}</span>
           </button>
         ))}
 
         <div className="relative" ref={dropdownRef}>
           <button 
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${activeSection === 'services' || activeSection === 'projects' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600 hover:bg-slate-100'}`}
+            className={`flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all duration-300 ${['services', 'projects'].includes(activeSection) ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600 hover:bg-white/50'}`}
           >
             <Folder className="w-4 h-4" />
-            <span className="hidden sm:inline">Work</span>
+            <span className="hidden sm:inline uppercase tracking-widest">Work</span>
             <ChevronDown className={`w-3 h-3 transition-transform ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
           </button>
           <AnimatePresence>
             {isDropdownOpen && (
-              <GlassCard className="absolute top-full mt-4 w-40 left-1/2 -translate-x-1/2 py-2 overflow-hidden border-white shadow-2xl origin-top rounded-2xl" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                <button onClick={() => handleNav('services')} className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-left">
+              <GlassCard className="absolute top-full mt-4 w-40 left-1/2 -translate-x-1/2 py-2 overflow-hidden border-white shadow-2xl origin-top rounded-2xl bg-white/95" initial={{ opacity: 0, scale: 0.95, y: -10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: -10 }}>
+                <button onClick={() => handleNav('services')} className="flex items-center gap-3 w-full px-4 py-3.5 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-left uppercase tracking-widest">
                   <Lightbulb className="w-3.5 h-3.5" /> Services
                 </button>
-                <button onClick={() => handleNav('projects')} className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-left">
+                <button onClick={() => handleNav('projects')} className="flex items-center gap-3 w-full px-4 py-3.5 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-left uppercase tracking-widest">
                   <Globe className="w-3.5 h-3.5" /> Projects
                 </button>
               </GlassCard>
@@ -195,10 +303,10 @@ const Navbar = () => {
           <button 
             key={link.id}
             onClick={() => handleNav(link.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${activeSection === link.id ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600 hover:bg-slate-100'}`}
+            className={`flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all duration-300 ${activeSection === link.id ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600 hover:bg-white/50'}`}
           >
             <link.icon className="w-4 h-4" />
-            <span className="hidden sm:inline">{link.label}</span>
+            <span className="hidden sm:inline uppercase tracking-widest">{link.label}</span>
           </button>
         ))}
       </GlassCard>
@@ -229,9 +337,9 @@ const Hero = () => {
   }, [text, isDeleting, index]);
 
   return (
-    <section id="home" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section id="home" className="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${HERO_BACKGROUND_URL}')` }}>
-        <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px]" />
+        <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-slate-50" />
 
@@ -239,31 +347,31 @@ const Hero = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="relative z-10 px-6 flex flex-col items-center"
+        className="relative z-10 px-6 flex flex-col items-center w-full"
       >
-        <div className="w-32 h-32 rounded-full border-4 border-white shadow-xl overflow-hidden mb-8 group transition-transform duration-500 hover:scale-105">
+        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-2xl overflow-hidden mb-6 sm:mb-8 group transition-transform duration-500 hover:scale-110">
           <img src="profile2.png" alt={portfolioData.name} className="w-full h-full object-cover" onError={(e) => e.target.src="https://placehold.co/120x120/D0E7FF/0F4C81?text=SC"} />
         </div>
         
-        <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight mb-4 text-center leading-tight">
+        <h1 className="text-4xl md:text-7xl font-black text-slate-900 tracking-tight mb-4 text-center leading-tight">
           {portfolioData.name.split(' ')[0]} <span className="text-blue-600">{portfolioData.name.split(' ')[1]}</span>
         </h1>
         
-        <p className="text-lg md:text-xl font-medium text-slate-600 mb-8 max-w-lg mx-auto text-center leading-relaxed">
+        <p className="text-base md:text-xl font-medium text-slate-600 mb-8 max-w-lg mx-auto text-center leading-relaxed">
           {portfolioData.role}
         </p>
         
-        <div className="bg-white/40 border border-white/60 px-6 py-2 rounded-full mb-12 shadow-sm">
-          <span className="font-mono text-blue-700 text-sm font-bold">
+        <div className="bg-white/40 border border-white/60 px-6 py-2.5 rounded-full mb-10 sm:mb-12 shadow-sm min-h-[40px] flex items-center justify-center backdrop-blur-md">
+          <span className="font-mono text-blue-700 text-xs sm:text-sm font-bold text-center">
             {text}<span className="animate-blink">|</span>
           </span>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4">
-          <button onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })} className="px-8 py-3 bg-blue-600 text-white rounded-full font-bold text-sm shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto px-10 sm:px-0">
+          <button onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })} className="px-10 py-4 bg-blue-600 text-white rounded-full font-bold text-sm shadow-xl hover:bg-blue-700 hover:scale-105 transition-all flex items-center justify-center gap-2 active:scale-95">
             View Projects <ArrowRight className="w-4 h-4" />
           </button>
-          <button onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })} className="px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-full font-bold text-sm shadow-sm hover:shadow-md transition-all">
+          <button onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })} className="px-10 py-4 bg-white text-slate-700 border border-slate-200 rounded-full font-bold text-sm shadow-md hover:shadow-lg transition-all active:scale-95">
             Contact Me
           </button>
         </div>
@@ -272,26 +380,38 @@ const Hero = () => {
   );
 };
 
-const ProjectsSection = () => {
+const ProjectsSection = ({ onTriggerBurst }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.4 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleHubClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    onTriggerBurst(x, y);
+    
+    setTimeout(() => {
+      window.open("https://my-project-portfolio-omega.vercel.app/", "_blank", "noopener,noreferrer");
+    }, 500);
+  };
 
   return (
-    <section id="projects" className="py-24 px-4 bg-white relative" ref={ref}>
+    <section id="projects" className="py-24 px-4 bg-white relative overflow-hidden" ref={ref}>
       <div className="max-w-4xl mx-auto">
         <SectionHeader title="Featured Work" subtitle="A collection of specialized tools and AI-driven platforms. Visit the workspace to explore them all." />
         
-        <div className="relative h-[400px] flex items-center justify-center mt-10">
+        <div className="relative h-[300px] md:h-[450px] flex items-center justify-center mt-10">
           {/* Subtle Background Rings */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-[0.05]">
-             <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="w-[280px] h-[280px] border border-blue-600 rounded-full" />
-             <motion.div animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} className="absolute w-[400px] h-[400px] border border-blue-400 rounded-full" />
+          <div className="absolute inset-0 flex items-center justify-center opacity-[0.08]">
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="w-[200px] h-[200px] md:w-[320px] md:h-[320px] border-2 border-dashed border-blue-600 rounded-full" />
+              <motion.div animate={{ rotate: -360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} className="absolute w-[300px] h-[300px] md:w-[480px] md:h-[480px] border border-blue-400 rounded-full" />
           </div>
 
-          {/* Floating Project Labels */}
+          {/* Floating Labels */}
           {portfolioData.projectNames.map((name, i) => {
             const angle = (i / portfolioData.projectNames.length) * Math.PI * 2;
-            const radius = 180; 
+            const radius = 210; 
             const x = Math.cos(angle) * radius;
             const y = Math.sin(angle) * radius;
 
@@ -300,39 +420,60 @@ const ProjectsSection = () => {
                 key={name}
                 initial={{ opacity: 0, x: 0, y: 0 }}
                 animate={isInView ? { opacity: 1, x, y } : {}}
-                transition={{ delay: i * 0.1, duration: 0.8 }}
+                transition={{ delay: i * 0.1, duration: 1 }}
                 className="absolute hidden md:block"
               >
-                <div className="px-4 py-2 bg-slate-50 border border-slate-100 shadow-sm rounded-full text-slate-600 font-bold text-[10px] uppercase tracking-wide whitespace-nowrap">
+                <div className="px-5 py-2.5 bg-slate-50 border border-slate-200 shadow-sm rounded-full text-slate-600 font-bold text-[10px] uppercase tracking-widest whitespace-nowrap hover:bg-blue-600 hover:text-white transition-colors cursor-default">
                   {name}
                 </div>
               </motion.div>
             );
           })}
 
-          <div className="md:hidden flex flex-wrap justify-center gap-2 absolute top-0 w-full">
+          <div className="md:hidden flex flex-wrap justify-center gap-2 absolute -top-8 w-full px-4">
             {portfolioData.projectNames.map((name, i) => (
-              <span key={i} className="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-[9px] font-bold text-slate-400 uppercase">{name}</span>
+              <motion.span key={i} initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: i * 0.05 }} className="px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-full text-[9px] font-bold text-slate-400 uppercase">{name}</motion.span>
             ))}
           </div>
 
-          {/* Main Redirect Button */}
+          {/* Enhanced Workspace Button */}
           <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={isInView ? { scale: 1, opacity: 1 } : {}}
-            transition={{ delay: 0.6 }}
-            className="z-10"
+            initial={{ scale: 0.9, opacity: 0 }} 
+            animate={isInView ? { scale: 1, opacity: 1 } : {}} 
+            transition={{ delay: 0.6 }} 
+            className="relative"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
-            <a 
-              href="https://my-project-portfolio-omega.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex flex-col items-center justify-center w-52 h-52 bg-white border border-blue-50 rounded-full shadow-2xl hover:shadow-blue-100 transition-all duration-500 hover:scale-105 active:scale-95"
+            {/* Dynamic Energy Rings - Explicitly visible on hover */}
+            <AnimatePresence>
+              {isHovered && [1, 1.25, 1.5].map((s, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ scale: 1, opacity: 0.5 }}
+                  animate={{ scale: s + 0.3, opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1, repeat: Infinity, delay: i * 0.3 }}
+                  className="absolute inset-0 rounded-full border-2 border-blue-500 pointer-events-none"
+                />
+              ))}
+            </AnimatePresence>
+            
+            <button 
+              onClick={handleHubClick}
+              className="relative flex flex-col items-center justify-center w-48 h-48 sm:w-60 sm:h-60 bg-white border border-blue-100 rounded-full shadow-[0_20px_60px_-15px_rgba(59,130,246,0.3)] hover:shadow-blue-300 transition-all duration-700 hover:scale-105 active:scale-90 z-10 overflow-hidden"
             >
-              <Rocket className="text-blue-600 w-8 h-8 mb-4 group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-black text-slate-800 tracking-tighter uppercase mb-1">Open Workspace</span>
-              <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1">Portfolio Hub <ExternalLink className="w-3 h-3" /></span>
-            </a>
+              <motion.div 
+                animate={isHovered ? { y: -10, scale: 1.2 } : { y: 0, scale: 1 }}
+                className="flex flex-col items-center"
+              >
+                <Rocket className="text-blue-600 w-10 h-10 mb-5 transition-transform duration-500 ease-out" />
+                <span className="text-xs sm:text-base font-black text-slate-800 tracking-tight uppercase mb-1">Open Workspace</span>
+                <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1">Portfolio Hub <ExternalLink className="w-3 h-3" /></span>
+              </motion.div>
+              
+              <div className="absolute inset-2 border border-blue-50 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-700" />
+            </button>
           </motion.div>
         </div>
       </div>
@@ -341,36 +482,36 @@ const ProjectsSection = () => {
 };
 
 const AboutSection = () => (
-  <section id="about" className="py-24 px-4 bg-slate-50">
-    <div className="max-w-5xl mx-auto">
+  <section id="about" className="py-24 px-4 bg-slate-50 relative overflow-hidden">
+    <div className="max-w-5xl mx-auto relative z-10">
       <SectionHeader title="Technical Identity" />
       <div className="grid md:grid-cols-2 gap-8">
-        <GlassCard className="p-8">
-          <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-blue-600"><Sparkles className="w-5 h-5" /> Mission</h3>
-          <p className="text-slate-600 text-sm leading-relaxed mb-6">{portfolioData.mission}</p>
-          <div className="space-y-3">
+        <GlassCard className="p-8 sm:p-10">
+          <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-blue-600"><Sparkles className="w-5 h-5" /> Mission</h3>
+          <p className="text-slate-600 text-sm leading-relaxed mb-8 font-medium">{portfolioData.mission}</p>
+          <div className="space-y-4">
             {portfolioData.strengths.map((s, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                <CheckCircle className="text-green-500 w-4 h-4" /> {s}
+              <div key={i} className="flex items-center gap-3 text-sm font-bold text-slate-700">
+                <div className="bg-green-100 p-1 rounded-full"><CheckCircle className="text-green-600 w-3.5 h-3.5" /></div> {s}
               </div>
             ))}
           </div>
         </GlassCard>
         <div className="space-y-6">
-          <GlassCard className="p-6">
-             <h3 className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-4">Tech Stack</h3>
+          <GlassCard className="p-8">
+             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-blue-600 mb-6">Expertise Stack</h3>
              <div className="flex flex-wrap gap-2">
                {Object.values(portfolioData.technicalProficiency).flat().map((skill, i) => (
-                 <span key={i} className="px-3 py-1 bg-white border border-slate-100 rounded-lg text-xs font-bold text-slate-500">{skill}</span>
+                 <span key={i} className="px-4 py-2 bg-white/50 border border-slate-100 rounded-xl text-xs font-bold text-slate-600 hover:bg-blue-600 hover:text-white transition-all cursor-default">{skill}</span>
                ))}
              </div>
           </GlassCard>
-          <GlassCard className="p-6">
-             <h3 className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-4">Education</h3>
+          <GlassCard className="p-8">
+             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-blue-600 mb-4">Academic Background</h3>
              {portfolioData.education.map((edu, i) => (
                <div key={i}>
-                 <p className="text-sm font-bold text-slate-800">{edu.title}</p>
-                 <p className="text-xs text-slate-400">{edu.institution} | {edu.year}</p>
+                 <p className="text-sm font-black text-slate-800">{edu.title}</p>
+                 <p className="text-xs text-slate-400 font-bold mt-1">{edu.institution} | {edu.year}</p>
                </div>
              ))}
           </GlassCard>
@@ -381,53 +522,94 @@ const AboutSection = () => (
 );
 
 const ServicesSection = () => (
-  <section id="services" className="py-24 px-4 bg-white">
-    <div className="max-w-5xl mx-auto">
-      <SectionHeader title="CreaGen Solutions" subtitle="Specialized AI and Full Stack consultancy for modern business challenges." />
-      <div className="grid sm:grid-cols-2 gap-6">
-        <GlassCard className="p-8 bg-slate-50 border-none">
-          <TrendingUp className="text-blue-600 w-8 h-8 mb-6" />
-          <h3 className="text-xl font-bold mb-4">Current Focus</h3>
-          <ul className="space-y-3">
-            {portfolioData.creagen.completedProjects.map((p, i) => (
-              <li key={i} className="text-sm font-bold text-slate-600 flex items-center gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full" /> {p.name}</li>
-            ))}
-          </ul>
-        </GlassCard>
-        <GlassCard className="p-8 bg-blue-600 text-white border-none shadow-blue-100">
-           <h3 className="text-xl font-bold mb-4">Roadmap</h3>
-           <p className="text-blue-50 text-sm mb-6 opacity-80 italic">"{portfolioData.creagen.vision}"</p>
-           <ul className="space-y-3">
-             {portfolioData.creagen.upcomingProjects.map((p, i) => (
-               <li key={i} className="text-sm font-bold flex items-center gap-2"><div className="w-1.5 h-1.5 bg-white rounded-full" /> {p.name}</li>
-             ))}
-           </ul>
-        </GlassCard>
+  <section id="services" className="py-24 px-4 bg-white relative">
+    <div className="max-w-6xl mx-auto">
+      <SectionHeader title="CreaGen Solutions" subtitle="High-impact consultancy turning visionary concepts into functional digital realities with precision and power." />
+      
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Current Focus Section - High Contrast White Background */}
+        <div className="p-8 md:p-10 border-2 border-slate-900 rounded-3xl bg-white shadow-xl relative overflow-hidden group">
+          <div className="relative z-10">
+            <div className="flex items-center gap-5 mb-8">
+              <div className="bg-slate-900 p-4 rounded-2xl">
+                <TrendingUp className="w-8 h-8 text-blue-500" />
+              </div>
+              <div>
+                <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tighter">Current Focus</h3>
+                <p className="text-blue-600 text-[10px] font-black tracking-widest uppercase mt-1">Operational Excellence</p>
+              </div>
+            </div>
+            
+            <div className="grid gap-6">
+              {portfolioData.creagen.completedProjects.map((p, i) => (
+                <div key={i} className="flex gap-4 p-5 rounded-2xl border border-slate-100 bg-slate-50 hover:border-blue-600 transition-all group/item">
+                  <Activity className="w-6 h-6 text-blue-600 shrink-0" />
+                  <div>
+                    <h4 className="font-black text-base text-slate-900">{p.name}</h4>
+                    <p className="text-xs text-slate-700 font-bold mt-1 leading-relaxed">{p.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Innovation Pipeline Section - High Contrast Blue/Black Theme */}
+        <div className="p-8 md:p-10 border-2 border-blue-600 rounded-3xl bg-slate-50 shadow-xl relative overflow-hidden group">
+          <div className="relative z-10">
+            <div className="flex items-center gap-5 mb-8">
+              <div className="bg-blue-600 p-4 rounded-2xl shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                <Lightbulb className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tighter">Pipeline</h3>
+                <p className="text-blue-600 text-[10px] font-black tracking-widest uppercase mt-1">Future Architectures</p>
+              </div>
+            </div>
+
+            <p className="text-slate-950 text-sm italic font-black leading-relaxed mb-8 border-l-4 border-blue-600 pl-4 py-1">
+              "{portfolioData.creagen.vision}"
+            </p>
+
+            <div className="grid gap-6">
+              {portfolioData.creagen.upcomingProjects.map((p, i) => (
+                <div key={i} className="flex gap-4 p-5 rounded-2xl border-2 border-slate-900 bg-white hover:bg-slate-900 hover:text-white transition-all group/item">
+                  <p.icon className="w-6 h-6 text-blue-600 shrink-0 group-hover/item:text-blue-400 transition-transform" />
+                  <div>
+                    <h4 className="font-black text-base uppercase tracking-tight">{p.name}</h4>
+                    <p className="text-xs font-bold mt-1 leading-relaxed opacity-80">{p.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 );
 
 const AchievementsSection = () => (
-  <section id="certifications" className="py-24 px-4 bg-slate-50">
-    <div className="max-w-5xl mx-auto">
-      <SectionHeader title="Achievements" />
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className="space-y-4">
+  <section id="certifications" className="py-24 px-4 bg-slate-50 relative overflow-hidden">
+    <BackgroundPulse />
+    <div className="max-w-5xl mx-auto relative z-10">
+      <SectionHeader title="Global Recognition" />
+      <div className="grid md:grid-cols-2 gap-6 sm:gap-10">
+        <div className="space-y-5">
           {portfolioData.achievements.map((item, i) => (
-            <GlassCard key={i} className="p-4 flex items-center gap-4">
-              <div className="bg-green-100 p-1.5 rounded-lg"><CheckCircle className="text-green-600 w-4 h-4" /></div>
-              <span className="text-sm font-bold text-slate-700">{item.name}</span>
+            <GlassCard key={i} className="p-5 flex items-center gap-5 hover:translate-x-2 transition-transform bg-white/40">
+              <div className="bg-green-100 p-2 rounded-xl shrink-0"><CheckCircle className="text-green-600 w-5 h-5" /></div>
+              <span className="text-sm font-black text-slate-800">{item.name}</span>
             </GlassCard>
           ))}
         </div>
-        <div className="space-y-4">
+        <div className="space-y-5">
           {portfolioData.events.map((item, i) => (
-            <GlassCard key={i} className="p-4 flex items-center gap-4">
-              <div className="bg-blue-100 p-1.5 rounded-lg"><item.icon className="text-blue-600 w-4 h-4" /></div>
+            <GlassCard key={i} className="p-5 flex items-center gap-5 hover:translate-x-2 transition-transform bg-white/40">
+              <div className="bg-blue-100 p-2 rounded-xl shrink-0"><item.icon className="text-blue-600 w-5 h-5" /></div>
               <div>
-                <p className="text-sm font-bold text-slate-700">{item.name}</p>
-                <p className="text-[10px] text-slate-400 uppercase tracking-widest">{item.role}</p>
+                <p className="text-sm font-black text-slate-800">{item.name}</p>
+                <p className="text-[10px] text-blue-500 font-black uppercase tracking-[0.2em] mt-1">{item.role}</p>
               </div>
             </GlassCard>
           ))}
@@ -446,28 +628,44 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-24 px-4 bg-white">
-      <div className="max-w-4xl mx-auto">
-        <SectionHeader title="Contact" subtitle="Let's build something significant together." />
-        <div className="grid md:grid-cols-2 gap-10 items-start">
-          <GlassCard className="p-8">
-            <form className="space-y-4" onSubmit={handleMailto}>
-              <input name="name" type="text" placeholder="Your Name" className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none focus:border-blue-600 text-sm font-bold" required />
-              <input name="email" type="email" placeholder="Your Email" className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none focus:border-blue-600 text-sm font-bold" required />
-              <textarea name="message" placeholder="Briefly describe your interest..." rows="3" className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none focus:border-blue-600 text-sm font-bold" required></textarea>
-              <button type="submit" className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-black transition-all active:scale-95 text-xs uppercase tracking-widest">Send Initiative</button>
+    <section id="contact" className="py-24 px-4 bg-white relative overflow-hidden">
+      <BackgroundPulse />
+      <div className="max-w-4xl mx-auto relative z-10">
+        <SectionHeader title="Collaborate" subtitle="Let's build something significant together. Reach out for innovative solutions." />
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <GlassCard className="p-8 sm:p-10 shadow-2xl bg-white/80">
+            <form className="space-y-5" onSubmit={handleMailto}>
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Identify Yourself</label>
+                <input name="name" type="text" placeholder="Your Name" className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 outline-none focus:border-blue-600 focus:bg-white text-sm font-bold transition-all" required />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">How to Reply?</label>
+                <input name="email" type="email" placeholder="Your Email" className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 outline-none focus:border-blue-600 focus:bg-white text-sm font-bold transition-all" required />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">The Mission</label>
+                <textarea name="message" placeholder="Briefly describe your interest..." rows="4" className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 outline-none focus:border-blue-600 focus:bg-white text-sm font-bold transition-all resize-none" required></textarea>
+              </div>
+              <button type="submit" className="w-full py-5 bg-slate-900 text-white font-black rounded-2xl hover:bg-blue-600 transition-all active:scale-95 text-[10px] uppercase tracking-[0.3em] shadow-xl">Send Initiative</button>
             </form>
           </GlassCard>
-          <div className="space-y-8 py-4">
-            <div className="flex gap-4">
+          
+          <div className="space-y-10 py-4 flex flex-col items-center md:items-start">
+            <div className="flex gap-5">
               {portfolioData.socials.map((s, i) => (
-                <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="p-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md hover:scale-105 transition-all text-blue-600">
-                  <s.icon className="w-6 h-6" />
+                <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="p-5 bg-white border border-slate-100 rounded-[2rem] shadow-lg hover:shadow-blue-100 hover:scale-110 transition-all text-blue-600 group">
+                  <s.icon className="w-7 h-7 group-hover:rotate-12 transition-transform" />
                 </a>
               ))}
             </div>
-            <div className="text-slate-400 font-bold text-xs uppercase tracking-widest border-l-2 border-blue-600 pl-4">
-              Andhra Pradesh, India
+            <div className="space-y-4">
+              <div className="text-slate-400 font-black text-[10px] uppercase tracking-widest border-l-4 border-blue-600 pl-6 py-2">
+                Location: Andhra Pradesh, India
+              </div>
+              <div className="text-slate-400 font-black text-[10px] uppercase tracking-widest border-l-4 border-blue-200 pl-6 py-2">
+                Status: Available for Collaboration
+              </div>
             </div>
           </div>
         </div>
@@ -478,31 +676,58 @@ const ContactSection = () => {
 
 const App = () => {
   const [loading, setLoading] = useState(true);
+  const [bursts, setBursts] = useState([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
+    const timer = setTimeout(() => setLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 
+  const triggerBurst = (x, y) => {
+    const id = Date.now();
+    setBursts(prev => [...prev, { id, x, y }]);
+    setTimeout(() => {
+      setBursts(prev => prev.filter(b => b.id !== id));
+    }, 1500);
+  };
+
   return (
-    <div className="min-h-screen font-sans bg-slate-50 selection:bg-blue-600 selection:text-white">
+    <div className="relative w-full overflow-x-hidden min-h-screen font-sans bg-slate-50 selection:bg-blue-600 selection:text-white">
+      <GlobalStyles />
       <AnimatePresence>
         {loading && <Loader key="loader" />}
       </AnimatePresence>
 
+      {/* Full Page Energy Release */}
+      {bursts.map(burst => (
+        <motion.div
+          key={burst.id}
+          initial={{ width: 0, height: 0, opacity: 1, borderWidth: 20 }}
+          animate={{ 
+            width: '400vmax', 
+            height: '400vmax', 
+            opacity: 0,
+            borderWidth: 0
+          }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+          className="energy-ring"
+          style={{ left: burst.x, top: burst.y, borderColor: '#3b82f6' }}
+        />
+      ))}
+
       <Navbar />
-      <main>
+      <main className="w-full">
         <Hero />
         <AboutSection />
         <ServicesSection />
-        <ProjectsSection />
+        <ProjectsSection onTriggerBurst={triggerBurst} />
         <AchievementsSection />
         <ContactSection />
       </main>
 
-      <footer className="py-12 bg-white text-center border-t border-slate-100">
-        <p className="text-slate-300 font-bold text-[10px] uppercase tracking-[0.3em]">
-          &copy; {new Date().getFullYear()} {portfolioData.name}
+      <footer className="py-16 bg-white text-center border-t border-slate-100 relative z-10">
+        <p className="text-slate-300 font-black text-[10px] uppercase tracking-[0.4em]">
+          &copy; {new Date().getFullYear()} {portfolioData.name} • Designed for impact
         </p>
       </footer>
     </div>
